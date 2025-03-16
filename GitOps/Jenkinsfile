@@ -1,6 +1,6 @@
 @Library('Shared') _
 pipeline {
-    agent {label 'Node'}
+    agent any
     
     parameters {
         string(name: 'FRONTEND_DOCKER_TAG', defaultValue: '', description: 'Frontend Docker tag of the image built by the CI job')
@@ -19,7 +19,7 @@ pipeline {
         stage('Git: Code Checkout') {
             steps {
                 script{
-                    code_checkout("https://github.com/DevMadhup/Wanderlust-Mega-Project.git","main")
+                    code_checkout("https://github.com/Vishal-Kumar-CSE/Wanderlust-Mega-Project.git","main")
                 }
             }
         }
@@ -37,15 +37,15 @@ pipeline {
         stage("Update: Kubernetes manifests"){
             steps{
                 script{
-                    dir('kubernetes'){
+                    dir('k8s'){
                         sh """
-                            sed -i -e s/wanderlust-backend-beta.*/wanderlust-backend-beta:${params.BACKEND_DOCKER_TAG}/g backend.yaml
+                            sed -i -e s/wanderlust-backend.*/wanderlust-backend:${params.BACKEND_DOCKER_TAG}/g backend.yml
                         """
                     }
                     
-                    dir('kubernetes'){
+                    dir('k8s'){
                         sh """
-                            sed -i -e s/wanderlust-frontend-beta.*/wanderlust-frontend-beta:${params.FRONTEND_DOCKER_TAG}/g frontend.yaml
+                            sed -i -e s/wanderlust-frontend.*/wanderlust-frontend:${params.FRONTEND_DOCKER_TAG}/g frontend.yml
                         """
                     }
                     
@@ -56,7 +56,7 @@ pipeline {
         stage("Git: Code update and push to GitHub"){
             steps{
                 script{
-                    withCredentials([gitUsernamePassword(credentialsId: 'Github-cred', gitToolName: 'Default')]) {
+                    withCredentials([gitUsernamePassword(credentialsId: 'Github', gitToolName: 'Default')]) {
                         sh '''
                         echo "Checking repository status: "
                         git status
@@ -68,7 +68,7 @@ pipeline {
                         git commit -m "Updated environment variables"
                         
                         echo "Pushing changes to github: "
-                        git push https://github.com/DevMadhup/Wanderlust-Mega-Project.git main
+                        git push https://github.com/Vishal-Kumar-CSE/Wanderlust-Mega-Project.git main
                     '''
                     }
                 }
@@ -76,10 +76,10 @@ pipeline {
         }
     }
   post {
-        always {
+        success {
             script {
                 emailext attachLog: true,
-                from: '8007930568pandey@gmail.com',
+                from: 'vishalk3014687@gmail.com',
                 subject: "Wanderlust Application has been updated and deployed - '${currentBuild.result}'",
                 body: """
                     <html>
@@ -96,7 +96,28 @@ pipeline {
                     </body>
                     </html>
             """,
-            to: '8007930568pandey@gmail.com',
+            to: 'vishalk3014687@gmail.com',
+            mimeType: 'text/html'
+            }
+        }
+      failure {
+            script {
+                emailext attachLog: true,
+                from: 'vishalk3014687@gmail.com',
+                subject: "Wanderlust Application build failed - '${currentBuild.result}'",
+                body: """
+                    <html>
+                    <body>
+                        <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
+                            <p style="color: black; font-weight: bold;">Project: ${env.JOB_NAME}</p>
+                        </div>
+                        <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
+                            <p style="color: black; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
+                        </div>
+                    </body>
+                    </html>
+            """,
+            to: 'vishalk3014687@gmail.com',
             mimeType: 'text/html'
             }
         }
