@@ -1,4 +1,5 @@
 #!/bin/bash
+: '
 
 # Fetch the public IP of the frontend service in AKS
 frontend_ip=$(kubectl get svc frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -29,3 +30,4 @@ else
         fi
 fi
 
+'

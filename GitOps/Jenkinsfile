@@ -19,7 +19,7 @@ pipeline {
         stage('Git: Code Checkout') {
             steps {
                 script{
-                    code_checkout("https://github.com/Vishal-Kumar-CSE/Wanderlust-Mega-Project.git","main")
+                    code_checkout("https://github.com/Vishal-Kumar-CSE/Wanderlust-Mega-Project-AKS.git","main")
                 }
             }
         }
@@ -68,7 +68,7 @@ pipeline {
                         git commit -m "Updated environment variables"
                         
                         echo "Pushing changes to github: "
-                        git push https://github.com/Vishal-Kumar-CSE/Wanderlust-Mega-Project.git main
+                        git push https://github.com/Vishal-Kumar-CSE/Wanderlust-Mega-Project-AKS.git main
                     '''
                     }
                 }
