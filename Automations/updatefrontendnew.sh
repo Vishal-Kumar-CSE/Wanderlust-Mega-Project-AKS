@@ -1,5 +1,5 @@
 #!/bin/bash
-: '
+: <<'EOF'
 # Retrieve the public IP address of the backend service in AKS
 backend_ip=$(kubectl get svc backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
@@ -29,4 +29,4 @@ else
         fi
 fi
 
-'
+EOF
