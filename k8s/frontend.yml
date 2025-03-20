@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: kmvishal/wanderlust-frontend:v2.1
+        image: kmvishal/wanderlust-frontend:v2.2
         ports:
         - containerPort: 5173
 ---
