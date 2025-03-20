@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: wanderlust.linkpc.net
+    - host: wonderlust.lovestoblog.com
       http:
         paths:
           - path: "/.well-known/acme-challenge/(.*)"
@@ -28,5 +28,5 @@ spec:
                   number: 5173
   tls:
     - hosts:
-        - wanderlust.linkpc.net
+        - wonderlust.lovestoblog.com
       secretName: wanderlust-tls
